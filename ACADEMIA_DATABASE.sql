@@ -82,7 +82,7 @@ CREATE TABLE MENSALIDADE_PLANO (
 
 CREATE TABLE ALUNO_TREINO (
 	matricula VARCHAR(10),
-	tipo VARCHAR(10),
+	tipo VARCHAR(20),
 	data_treino DATE,
 	numero_sessao INT,
 	PRIMARY KEY (matricula, tipo, data_treino),
