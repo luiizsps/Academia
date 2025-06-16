@@ -22,17 +22,17 @@ CREATE TABLE PLANO (
 );
 
 CREATE TABLE GRUPO_MUSCULAR (
-	nome_musculo VARCHAR(10) PRIMARY KEY
+	nome_musculo VARCHAR(20) PRIMARY KEY
 );
 
 CREATE TABLE TREINO (
-	tipo VARCHAR(10) PRIMARY KEY,
+	tipo VARCHAR(20) PRIMARY KEY,
 	qtd_sessoes INT
 );
 
 CREATE TABLE TREINO_GRUPO (
-	tipo VARCHAR(10),
-	nome_musculo VARCHAR(10),
+	tipo VARCHAR(20),
+	nome_musculo VARCHAR(20),
 	FOREIGN KEY (tipo) REFERENCES TREINO(tipo),
 	FOREIGN KEY (nome_musculo) REFERENCES GRUPO_MUSCULAR(nome_musculo)
 );
@@ -46,9 +46,9 @@ CREATE TABLE EXERCICIO (
 );
 
 CREATE TABLE TREINO_EXERCICIO (
-	tipo VARCHAR(10),
-	nome_musculo VARCHAR(10),
-	nome_exercicio VARCHAR(10),
+	tipo VARCHAR(20),
+	nome_musculo VARCHAR(20),
+	nome_exercicio VARCHAR(20),
 	FOREIGN KEY (tipo) REFERENCES TREINO(tipo),
 	FOREIGN KEY (nome_musculo, nome_exercicio) REFERENCES EXERCICIO(nome_musculo, nome_exercicio)
 );
@@ -97,7 +97,7 @@ CREATE TABLE ANAMINESE (
 	gordura FLOAT,
 	massa FLOAT,
 	matricula VARCHAR(10),
-	tipo VARCHAR(10),
+	tipo VARCHAR(20),
 	data_treino DATE,
 	FOREIGN KEY (matricula, tipo, data_treino) REFERENCES ALUNO_TREINO(matricula, tipo, data_treino)
 );
