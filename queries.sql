@@ -20,3 +20,19 @@ SELECT
 FROM ALUNO 
 INNER JOIN ANAMINESE  ON ALUNO.matricula = ANAMINESE.matricula 
 WHERE ANAMINESE.data_treino >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH);
+
+-- 4. Alunos inadimplentes
+SELECT ALUNO.nome, ALUNO.matricula, ALUNO.CREF 
+	FROM ALUNO
+	JOIN
+		(SELECT data, MENSALIDADE_PLANO.matricula, nome_plano, data_pagamento FROM MENSALIDADE_PLANO
+		JOIN 
+			(SELECT matricula, MAX(data) AS data_pagamento FROM MENSALIDADE WHERE status = TRUE GROUP BY matricula) AS ultimo_pagamento
+		ON MENSALIDADE_PLANO.matricula = ultimo_pagamento.matricula AND MENSALIDADE_PLANO.data = ultimo_pagamento.data_pagamento)
+	AS matricula_mensalidade ON ALUNO.matricula = matricula_mensalidade.matricula
+WHERE
+	(matricula_mensalidade.nome_plano = 'Mensal' AND matricula_mensalidade.data_pagamento <= DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+	OR 
+	(matricula_mensalidade.nome_plano = 'Trimestral' AND matricula_mensalidade.data_pagamento <= DATE_SUB(CURDATE(), INTERVAL 3 MONTH))
+	OR 
+	(matricula_mensalidade.nome_plano = 'Anual' AND matricula_mensalidade.data_pagamento <= DATE_SUB(CURDATE(), INTERVAL 12 MONTH));
