@@ -51,12 +51,13 @@ INSERT INTO ALUNO (matricula, nome, data_nascimento, nome_plano, CREF) VALUES
 ('2025003', 'Carla Dias', '2002-02-10', 'Trimestral', '123456GBA');
 
 INSERT INTO MENSALIDADE (data, matricula, status) VALUES
-('2025-06-05', '2025001', TRUE),
+('2025-04-05', '2025001', TRUE),
+('2025-05-05', '2025001', TRUE),
 ('2025-01-10', '2025002', TRUE),
 ('2025-05-20', '2025003', TRUE);
 
 INSERT INTO MENSALIDADE_PLANO (data, matricula, nome_plano) VALUES
-('2025-06-05', '2025001', 'Mensal'),
+('2025-05-05', '2025001', 'Mensal'),
 ('2025-01-10', '2025002', 'Anual'),
 ('2025-05-20', '2025003', 'Trimestral');
 
