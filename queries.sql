@@ -64,9 +64,7 @@ FROM
 WHERE YEAR(data) = YEAR(CURDATE())
 GROUP BY MONTH(data);
 
--- 6. Quantidade de alunos por professor no último ano (dúvida: o que acontece com alunos que pagaram mensalidade em 2023 
--- e tem matrícula ativa em 2024?). Por exemplo: alguém que pagou o plano anual em dezembro de 2023
--- Seria interessante ter o status da matricula, registrando se a matricula do aluno está ativa ou não?
+-- 6. Quantidade de alunos por professor no último ano
 SELECT aluno_professor.nome_professor, COUNT(DISTINCT aluno_professor.matricula) AS numero_alunos
 FROM
 	(
@@ -75,5 +73,31 @@ FROM
 	JOIN PROFESSOR_RESPONSAVEL pr ON a.CREF = pr.CREF
 	) AS aluno_professor
 JOIN MENSALIDADE_PLANO mp ON aluno_professor.matricula = mp.matricula
-WHERE YEAR(DATE_SUB(CURDATE(), INTERVAL 12 MONTH)) = YEAR(mp.data)
+WHERE 
+	(YEAR(CURDATE()) - 1) = YEAR(mp.data)
+	OR
+	(
+	(YEAR(CURDATE()) - 2) = YEAR(mp.data) AND MONTH(mp.data) >= 10 AND mp.nome_plano = 'Trimestral'
+	)
+	OR
+	(
+	(YEAR(CURDATE()) - 2) = YEAR(mp.data) AND mp.nome_plano = 'Anual'
+	)
 GROUP BY aluno_professor.nome_professor;
+
+-- 7. Quantidade de alunos obesos por professor no último mês
+SELECT pr.nome AS nome_professor, COUNT(DISTINCT anaminese_aluno.matricula) AS alunos_obesos
+FROM 
+(
+	SELECT an.peso, an.altura, an.data_treino, a.matricula, a.CREF
+	FROM ANAMINESE an 
+	JOIN ALUNO a ON an.matricula = a.matricula
+) AS anaminese_aluno
+JOIN PROFESSOR_RESPONSAVEL pr ON anaminese_aluno.CREF = pr.CREF
+WHERE 
+	MONTH(anaminese_aluno.data_treino) = MONTH(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+	AND 
+	YEAR(anaminese_aluno.data_treino) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+	AND
+	(anaminese_aluno.peso / (anaminese_aluno.altura * anaminese_aluno.altura)) >= 30
+GROUP BY pr.nome;
