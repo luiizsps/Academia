@@ -101,3 +101,43 @@ WHERE
 	AND
 	(anaminese_aluno.peso / (anaminese_aluno.altura * anaminese_aluno.altura)) >= 30
 GROUP BY pr.nome;
+
+--8 - Implemente uma procedure que verifique a evolução do IMC de um aluno desde o ingresso até o último mês, e retorne o percentual evolução do mesmo;
+DELIMITER //
+DROP PROCEDURE IF EXISTS IMC_EVOLUCAO //
+CREATE PROCEDURE IMC_EVOLUCAO(IN a_matricula VARCHAR(10),OUT percentual_evolucao DECIMAL(10,2))
+BEGIN
+    DECLARE imc_pri DECIMAL(10,2);
+    DECLARE imc_ult DECIMAL(10,2);
+    SELECT (peso / (altura * altura))
+    INTO imc_pri
+    FROM ANAMINESE
+    WHERE matricula = a_matricula
+    ORDER BY data_treino ASC
+    LIMIT 1;
+
+    SELECT (peso / (altura * altura))
+    INTO imc_ult
+    FROM ANAMINESE
+    WHERE matricula = a_matricula
+    ORDER BY data_treino DESC
+    LIMIT 1;
+    
+    IF imc_pri IS NOT NULL AND imc_ult IS NOT NULL AND imc_pri != 0 THEN
+        SET percentual_evolucao = ((imc_ult - imc_pri) / imc_pri) * 100;
+    ELSE
+        SET percentual_evolucao = NULL;
+    END IF;
+
+    SELECT 
+        cod,
+        data_treino,
+        peso,
+        altura,
+        ROUND(peso / (altura * altura), 2) AS imc
+    FROM ANAMINESE
+    WHERE matricula = a_matricula
+    ORDER BY data_treino;
+END //
+DELIMITER ;
+
