@@ -48,15 +48,24 @@ INSERT INTO TREINO_EXERCICIO (tipo, nome_musculo, nome_exercicio) VALUES
 INSERT INTO ALUNO (matricula, nome, data_nascimento, nome_plano, CREF) VALUES
 ('2025001', 'Ana Souza', '2000-05-15', 'Mensal', '123456GBA'),
 ('2025002', 'Bruno Costa', '1998-11-20', 'Anual', '789012GBA'),
-('2025003', 'Carla Dias', '2002-02-10', 'Trimestral', '123456GBA');
+('2025003', 'Carla Dias', '2002-02-10', 'Trimestral', '345678GBA');
 
 INSERT INTO MENSALIDADE (data, matricula, status) VALUES
+('2024-01-10', '2025002', TRUE),
+('2024-03-08', '2025003', TRUE),
+('2024-03-05', '2025001', TRUE),
+('2024-04-05', '2025001', TRUE),
 ('2025-04-05', '2025001', TRUE),
 ('2025-05-05', '2025001', TRUE),
 ('2025-01-10', '2025002', TRUE),
 ('2025-05-20', '2025003', TRUE);
 
 INSERT INTO MENSALIDADE_PLANO (data, matricula, nome_plano) VALUES
+('2024-01-10', '2025002', 'Anual'),
+('2024-03-08', '2025003', 'Trimestral'),
+('2024-03-05', '2025001', 'Mensal'),
+('2024-04-05', '2025001', 'Mensal'),
+('2025-04-05', '2025001', 'Mensal'),
 ('2025-05-05', '2025001', 'Mensal'),
 ('2025-01-10', '2025002', 'Anual'),
 ('2025-05-20', '2025003', 'Trimestral');
