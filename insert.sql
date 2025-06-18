@@ -71,6 +71,7 @@ INSERT INTO MENSALIDADE_PLANO (data, matricula, nome_plano) VALUES
 ('2025-05-20', '2025003', 'Trimestral');
 
 INSERT INTO ALUNO_TREINO (matricula, tipo, data_treino, numero_sessao) VALUES
+('2025001', 'A', '2025-05-07', 1),
 ('2025001', 'A', '2025-06-07', 1),
 ('2025002', 'B', '2025-06-07', 1),
 ('2025003', 'C', '2025-06-07', 1),
@@ -115,6 +116,7 @@ INSERT INTO ALUNO_TREINO (matricula, tipo, data_treino, numero_sessao) VALUES
 ('2025001', 'A', '2025-05-05', 11);
 
 INSERT INTO ANAMINESE (cod, peso, altura, gordura, massa, matricula, tipo, data_treino) VALUES
+('ANM000', 90, 1.70, 22.5, 50.8, '2025001', 'A', '2025-05-07'),
 ('ANM001', 65.5, 1.70, 22.5, 50.8, '2025001', 'A', '2025-06-07'),
 ('ANM002', 80.0, 1.80, 18.0, 65.6, '2025002', 'B', '2025-06-07'),
 ('ANM003', 58.0, 1.65, 25.0, 43.5, '2025003', 'C', '2025-06-07');
