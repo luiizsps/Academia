@@ -141,3 +141,55 @@ BEGIN
 END //
 DELIMITER ;
 
+
+-- 9-Faça um ranqueamento dos alunos com maiores evoluções do IMC no último ano;
+
+
+
+  DROP PROCEDURE IF EXISTS rank_imc;
+
+  DELIMITER $$
+  CREATE PROCEDURE rank_imc()
+  
+  BEGIN
+
+  -- Definição de variáveis utilizadas na Procedure
+  DECLARE existe_mais_linhas INT DEFAULT 0;
+  DECLARE m VARCHAR(10);
+
+  -- Definição do cursor
+  DECLARE meuCursor CURSOR FOR SELECT DISTINCT matricula FROM ANAMINESE;
+
+  -- Definição da variável de controle de looping do cursor
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET existe_mais_linhas=1;
+
+  DROP TABLE IF EXISTS r;
+  CREATE TABLE r(matricula VARCHAR(10), imc decimal(10,2));
+  -- Abertura do cursor
+  OPEN meuCursor;
+
+  -- Looping de execução do cursor
+  meuLoop: LOOP
+  FETCH meuCursor INTO m;
+
+  -- Controle de existir mais registros na tabela
+  IF existe_mais_linhas = 1 THEN
+  LEAVE meuLoop;
+  END IF;
+  
+  
+
+  CALL IMC_EVOLUCAO(m,@imc);
+  INSERT INTO r(matricula, imc) VALUES(m,ABS(@imc));
+  
+
+  -- Retorna para a primeira linha do loop
+  END LOOP meuLoop;
+
+  SELECT matricula, imc FROM r
+  ORDER BY imc DESC;
+  END $$
+
+  DELIMITER ;
+
+  CALL rank_imc();
