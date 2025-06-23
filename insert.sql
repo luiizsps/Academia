@@ -120,7 +120,6 @@ INSERT INTO ALUNO_TREINO (matricula, tipo, data_treino, numero_sessao) VALUES
 
 INSERT INTO ANAMINESE (cod, peso, altura, gordura, massa, matricula, tipo, data_treino) VALUES
 ('ANM000', 90, 1.70, 22.5, 50.8, '2025001', 'A', '2025-05-07'),
-('ANM001', 65.5, 1.70, 22.5, 50.8, '2025001', 'A', '2025-06-07'),
 ('ANM002', 80.0, 1.80, 18.0, 65.6, '2025002', 'B', '2025-06-07'),
 ('ANM003', 58.0, 1.65, 25.0, 43.5, '2025003', 'C', '2025-06-07'),
 ('ANM006', 92.0, 1.70, 23.0, 50.0, '2025001', 'A', '2025-04-05'),
