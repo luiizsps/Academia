@@ -144,52 +144,29 @@ DELIMITER ;
 
 -- 9-Faça um ranqueamento dos alunos com maiores evoluções do IMC no último ano;
 
-
-
-  DROP PROCEDURE IF EXISTS rank_imc;
-
-  DELIMITER $$
-  CREATE PROCEDURE rank_imc()
-  
-  BEGIN
-
-  -- Definição de variáveis utilizadas na Procedure
-  DECLARE existe_mais_linhas INT DEFAULT 0;
-  DECLARE m VARCHAR(10);
-
-  -- Definição do cursor
-  DECLARE meuCursor CURSOR FOR SELECT DISTINCT matricula FROM ANAMINESE;
-
-  -- Definição da variável de controle de looping do cursor
-  DECLARE CONTINUE HANDLER FOR NOT FOUND SET existe_mais_linhas=1;
-
-  DROP TABLE IF EXISTS r;
-  CREATE TABLE r(matricula VARCHAR(10), imc decimal(10,2));
-  -- Abertura do cursor
-  OPEN meuCursor;
-
-  -- Looping de execução do cursor
-  meuLoop: LOOP
-  FETCH meuCursor INTO m;
-
-  -- Controle de existir mais registros na tabela
-  IF existe_mais_linhas = 1 THEN
-  LEAVE meuLoop;
-  END IF;
-  
-  
-
-  CALL IMC_EVOLUCAO(m,@imc);
-  INSERT INTO r(matricula, imc) VALUES(m,ABS(@imc));
-  
-
-  -- Retorna para a primeira linha do loop
-  END LOOP meuLoop;
-
-  SELECT matricula, imc FROM r
-  ORDER BY imc DESC;
-  END $$
-
-  DELIMITER ;
-
-  CALL rank_imc();
+SELECT a.matricula, ROUND(primeiro_imc.imc,2) AS primeiro_imc, ROUND(ultimo_imc.imc,2) AS ultimo_imc,
+    CASE
+        WHEN primeiro_imc.imc IS NULL OR primeiro_imc.imc = 0 THEN NULL
+        ELSE ABS(ROUND(((ultimo_imc.imc - primeiro_imc.imc) / primeiro_imc.imc) * 100,2))
+    END AS evolucao_percentual
+FROM (SELECT DISTINCT matricula FROM ANAMINESE) AS a
+LEFT JOIN
+    (SELECT a1.matricula, ABS(a1.peso / (a1.altura * a1.altura)) AS imc
+	 FROM ANAMINESE a1
+        JOIN ( SELECT matricula, MIN(data_treino) AS primeira_data_avaliacao
+            FROM ANAMINESE
+            WHERE YEAR(data_treino) >= YEAR(CURDATE())-1
+            GROUP BY matricula
+        ) AS t1 ON a1.matricula = t1.matricula AND a1.data_treino = t1.primeira_data_avaliacao
+    ) AS primeiro_imc ON a.matricula = primeiro_imc.matricula
+LEFT JOIN
+    ( SELECT a2.matricula, ABS(a2.peso / (a2.altura * a2.altura)) AS imc
+        FROM ANAMINESE a2
+        JOIN (
+            SELECT matricula, MAX(data_treino) AS ultima_data_avaliacao
+            FROM ANAMINESE
+            GROUP BY matricula
+        ) AS t2 ON a2.matricula = t2.matricula AND a2.data_treino = t2.ultima_data_avaliacao
+    ) AS ultimo_imc ON a.matricula = ultimo_imc.matricula
+ORDER BY
+    evolucao_percentual DESC;
