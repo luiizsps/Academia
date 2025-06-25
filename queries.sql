@@ -151,7 +151,7 @@ SELECT a.matricula, ROUND(primeiro_imc.imc,2) AS primeiro_imc, ROUND(ultimo_imc.
     END AS evolucao_percentual
 FROM (SELECT DISTINCT matricula FROM ANAMINESE) AS a
 LEFT JOIN
-    (SELECT a1.matricula, ABS(a1.peso / (a1.altura * a1.altura)) AS imc
+    (SELECT a1.matricula, a1.peso / (a1.altura * a1.altura) AS imc
 	 FROM ANAMINESE a1
         JOIN ( SELECT matricula, MIN(data_treino) AS primeira_data_avaliacao
             FROM ANAMINESE
@@ -160,7 +160,7 @@ LEFT JOIN
         ) AS t1 ON a1.matricula = t1.matricula AND a1.data_treino = t1.primeira_data_avaliacao
     ) AS primeiro_imc ON a.matricula = primeiro_imc.matricula
 LEFT JOIN
-    ( SELECT a2.matricula, ABS(a2.peso / (a2.altura * a2.altura)) AS imc
+    ( SELECT a2.matricula, a2.peso / (a2.altura * a2.altura) AS imc
         FROM ANAMINESE a2
         JOIN (
             SELECT matricula, MAX(data_treino) AS ultima_data_avaliacao
